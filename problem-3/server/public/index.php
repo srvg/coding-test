@@ -10,14 +10,14 @@ $logger = new Logger();
 
 // you may assume this code connects to some database with the following credentials
 
-$database_host = '127.0.0.1';
-$database_name = 'problemthree';
-$database_user = 'root';
-$database_password = '1234';
+$database_host = $_SERVER["DATABASE_HOST"];
+$database_name = $_SERVER["DATABASE_NAME"];
+$database_user = $_SERVER["DATABASE_USER"];
+$database_password = $_SERVER["DATABASE_PASSWORD"];
 
-$redis_host = '127.0.0.1';
-$redis_username = 'admin';
-$redis_password = 'admin123';
+$redis_host = $_SERVER["REDIS_HOST"];
+$redis_username = $_SERVER["REDIS_USER"];
+$redis_password = $_SERVER["REDIS_PASS"];
 
 // you may assume we query the database
 

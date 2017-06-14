@@ -23,6 +23,8 @@ module.exports = {
   devtool: 'eval-source-map',
 
   devServer: {
+    // https://stackoverflow.com/questions/43619644/i-am-getting-an-invalid-host-header-message-when-running-my-react-app-in-a-we
+    disableHostCheck: true,
     host: '0.0.0.0',
     port: 3000,
     stats: 'normal',

@@ -1,0 +1,84 @@
+version: '3'
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs
+    networks:
+      - front-tier
+      - back-tier
+    depends_on:
+      - frontend
+
+  frontend:
+    build: client/
+    hostname: client
+    restart: always
+    ports:
+     - "3000:3000"
+    expose:
+     - "3000"
+    networks:
+      - front-tier
+      - back-tier
+    environment:
+      - VIRTUAL_HOST=problem3.local
+      - VIRTUAL_PORT=3000
+  backend:
+    build: server/
+    hostname: server
+    restart: always
+    ports:
+     - "8080:80"
+    networks:
+      - back-tier
+    environment:
+      DATABASE_HOST: mysql
+      DATABASE_NAME: problemthree
+      DATABASE_USER: p3
+      DATABASE_PASSWORD: s3cr3t
+      REDIS_HOST: redis
+      REDIS_USER: admin
+      REDIS_PASS: admin123
+    environment:
+      - VIRTUAL_HOST=api.local
+      - VIRTUAL_PORT=8080
+  redis:
+    image: redis:3.2.9
+    hostname: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - back-tier
+  mysql:
+    image: mysql:5.6.36
+    hostname: mysql
+    restart: always
+    volumes:
+     - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: v3r3y1337s3cr3t
+      MYSQL_DATABASE: problemthree
+      MYSQL_USER: p3
+      MYSQL_PASSWORD: s3cr3t
+    networks:
+      - back-tier
+    ports:
+    - "3306:3306"
+volumes:
+  mysql-data:
+    driver: local
+  redis-data:
+    driver: local
+networks:
+  front-tier:
+    driver: bridge
+  back-tier:
+    driver: bridge
